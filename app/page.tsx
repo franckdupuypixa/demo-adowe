@@ -25,8 +25,8 @@ export default function RegisterPage() {
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.prenom || !form.nom || !form.email || !form.entreprise || !form.secteur) {
-      setError("Veuillez remplir tous les champs.");
+    if (!form.prenom || !form.nom || !form.email || !form.entreprise || !form.secteur || !form.siteUrl) {
+      setError("Veuillez remplir tous les champs, y compris l'URL de votre site.");
       return;
     }
     setLoading(true);
@@ -132,13 +132,14 @@ export default function RegisterPage() {
 
             {/* Site internet */}
             <div>
-              <label className="text-[#00c2ff]/70 text-xs font-inter mb-1.5 block">Site internet <span className="text-slate-600">(optionnel)</span></label>
+              <label className="text-[#00c2ff]/70 text-xs font-inter mb-1.5 block">Site internet <span className="text-red-400">*</span></label>
               <input
                 value={form.siteUrl}
                 onChange={e => set("siteUrl", e.target.value)}
                 placeholder="www.monentreprise.fr"
                 className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-600 font-inter outline-none focus:border-[#00c2ff]/50 transition-colors"
               />
+              <p className="text-slate-600 text-xs font-inter mt-1">Requis pour personaliser votre expérience</p>
             </div>
 
             {error && (

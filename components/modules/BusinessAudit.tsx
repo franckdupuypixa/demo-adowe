@@ -118,6 +118,16 @@ export default function BusinessAudit({ entreprise, secteur, siteUrl }: { entrep
         </>
       ) : (
         <div className="space-y-4">
+          {/* Site analysé */}
+          {siteUrl && (
+            <div className="flex items-center gap-2 bg-[#00c2ff]/10 border border-[#00c2ff]/20 rounded-xl px-4 py-3">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00c2ff" strokeWidth="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+              <p className="text-[#00c2ff] text-xs font-inter">
+                Analyse basée sur le contenu réel de <strong>{siteUrl}</strong>
+              </p>
+            </div>
+          )}
+
           {/* Score */}
           <div className={`bg-gradient-to-br ${scoreBg(result.score)} border rounded-xl p-5 text-center`}>
             <p className="text-slate-400 text-xs font-inter mb-2 uppercase tracking-wider">Score de maturité digitale</p>
