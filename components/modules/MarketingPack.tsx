@@ -13,19 +13,34 @@ export default function MarketingPack({ entreprise, secteur }: { entreprise: str
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<Result | null>(null);
   const [copied, setCopied] = useState("");
+  const [error, setError] = useState("");
 
   const generate = async () => {
     if (!desc.trim()) return;
     setLoading(true);
     setResult(null);
-    const res = await fetch("/api/generate/marketing", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ entreprise, secteur, description: desc }),
-    });
-    const data = await res.json();
-    setResult(data.result);
-    setLoading(false);
+    setError("");
+    try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 55000);
+      const res = await fetch("/api/generate/marketing", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ entreprise, secteur, description: desc }),
+        signal: controller.signal,
+      });
+      clearTimeout(timeout);
+      const data = await res.json();
+      if (data.result) {
+        setResult(data.result);
+      } else {
+        setError("Erreur de génération. Réessayez.");
+      }
+    } catch {
+      setError("Délai dépassé ou erreur réseau. Réessayez.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const copy = (text: string, key: string) => {
@@ -69,6 +84,9 @@ export default function MarketingPack({ entreprise, secteur }: { entreprise: str
             </span>
           ) : "✨ Générer mon pack marketing"}
         </button>
+        {error && (
+          <p className="mt-3 text-red-400 text-xs font-inter bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2">{error}</p>
+        )}
       </div>
 
       {result && (

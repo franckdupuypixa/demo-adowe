@@ -5,7 +5,7 @@ import { Resend } from "resend";
 export const maxDuration = 60;
 
 export async function POST(req: NextRequest) {
-  const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY, timeout: 50000 });
   const resend = new Resend(process.env.RESEND_API_KEY);
   try {
     const { entreprise, secteur, offre, cible, email } = await req.json();

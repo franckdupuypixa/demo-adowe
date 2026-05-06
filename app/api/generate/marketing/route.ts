@@ -4,7 +4,7 @@ import OpenAI from "openai";
 export const maxDuration = 60;
 
 export async function POST(req: NextRequest) {
-  const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY, timeout: 50000 });
   try {
     const { entreprise, secteur, description } = await req.json();
 
