@@ -15,24 +15,39 @@ export default function EmailSequence({ email, entreprise, secteur, onComplete }
   const [sent, setSent] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
   const [celebrate, setCelebrate] = useState(false);
+  const [error, setError] = useState("");
 
   const generate = async () => {
     if (!offre.trim()) return;
     setLoading(true);
     setEmails(null);
     setSent(false);
-    const res = await fetch("/api/generate/sequence", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ entreprise, secteur, offre, cible, email }),
-    });
-    const data = await res.json();
-    setEmails(data.emails);
-    setSent(data.sent);
-    setCelebrate(true);
-    setTimeout(() => setCelebrate(false), 2000);
-    setLoading(false);
-    onComplete?.(data.emails);
+    setError("");
+    try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 55000);
+      const res = await fetch("/api/generate/sequence", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ entreprise, secteur, offre, cible, email }),
+        signal: controller.signal,
+      });
+      clearTimeout(timeout);
+      const data = await res.json();
+      if (data.emails && data.emails.length > 0) {
+        setEmails(data.emails);
+        setSent(data.sent);
+        setCelebrate(true);
+        setTimeout(() => setCelebrate(false), 2000);
+        onComplete?.(data.emails);
+      } else {
+        setError("Erreur de génération. Réessayez dans quelques secondes.");
+      }
+    } catch {
+      setError("Délai dépassé ou erreur réseau. Réessayez.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const TABS = ["Email 1 — Bienvenue", "Email 2 — Relance", "Email 3 — Offre finale"];
@@ -73,6 +88,10 @@ export default function EmailSequence({ email, entreprise, secteur, onComplete }
       >
           📧 Générer ma séquence email automatisée
       </button>
+
+      {error && (
+        <p className="text-red-400 text-xs font-inter bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2">{error}</p>
+      )}
 
       {loading && (
         <LoadingAI messages={[

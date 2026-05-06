@@ -10,14 +10,14 @@ export async function POST(req: NextRequest) {
   const resend = new Resend(process.env.RESEND_API_KEY);
   try {
     const body = await req.json();
-    const { prenom, nom, email, entreprise, secteur } = body;
+    const { prenom, nom, email, entreprise, secteur, siteUrl } = body;
 
     if (!prenom || !nom || !email || !entreprise || !secteur) {
       return NextResponse.json({ ok: false, message: "Champs manquants" }, { status: 400 });
     }
 
     const code = generateCode();
-    const userData = { prenom, nom, email, entreprise, secteur };
+    const userData = { prenom, nom, email, entreprise, secteur, siteUrl: siteUrl || "" };
     const token = createVerifyToken(email, code, userData);
 
     // Email de vérification
@@ -67,6 +67,7 @@ export async function POST(req: NextRequest) {
             <tr><td style="padding:6px 0;color:#64748b;">Email</td><td style="color:#00c2ff;">${email}</td></tr>
             <tr><td style="padding:6px 0;color:#64748b;">Entreprise</td><td style="color:#e2e8f0;">${entreprise}</td></tr>
             <tr><td style="padding:6px 0;color:#64748b;">Secteur</td><td style="color:#e2e8f0;">${secteur}</td></tr>
+            <tr><td style="padding:6px 0;color:#64748b;">Site web</td><td style="color:#00c2ff;">${siteUrl || "Non renseigné"}</td></tr>
             <tr><td style="padding:6px 0;color:#64748b;">Date</td><td style="color:#e2e8f0;">${new Date().toLocaleString("fr-FR")}</td></tr>
           </table>
         </div>
