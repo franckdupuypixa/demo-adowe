@@ -47,8 +47,18 @@ JSON uniquement:
             <div style="font-size:15px;line-height:1.8;color:#334155;white-space:pre-wrap;">${emails[0].body}</div>
           </div>
 
+          <!-- CTA vers adowe.fr -->
+          <div style="padding:28px 32px;background:#0a0f2e;text-align:center;">
+            <p style="margin:0 0 6px;color:#94a3b8;font-size:13px;">Vous voulez cette séquence email pour vos vrais clients ?</p>
+            <p style="margin:0 0 20px;color:#ffffff;font-size:16px;font-weight:700;">ADOWE met tout en place pour vous en 48h.</p>
+            <a href="https://adowe.fr" style="display:inline-block;background:linear-gradient(135deg,#00c2ff,#8b5cf6);color:#ffffff;text-decoration:none;font-weight:700;font-size:14px;padding:14px 32px;border-radius:50px;letter-spacing:0.3px;">
+              Découvrir ADOWE →
+            </a>
+            <p style="margin:16px 0 0;color:#475569;font-size:11px;">adowe.fr · Agence marketing digitale</p>
+          </div>
+
           <!-- Séparateur -->
-          <div style="height:1px;background:#f1f5f9;margin:0 32px;"></div>
+          <div style="height:1px;background:#f1f5f9;"></div>
 
           <!-- Footer info démo -->
           <div style="padding:20px 32px;background:#f8fafc;border-radius:0 0 8px 8px;">
@@ -57,11 +67,6 @@ JSON uniquement:
               Cet email a été généré automatiquement par <strong>ADOWE Lab</strong> pour illustrer ce qu'une séquence email automatisée peut faire pour <strong>${entreprise}</strong>.<br/>
               En production, vos prospects recevraient une séquence de 3 emails espacés sur 7 jours.
             </p>
-            <div style="margin-top:16px;padding-top:14px;border-top:1px solid #e2e8f0;">
-              <a href="https://adowe.fr" style="color:#00c2ff;font-size:12px;text-decoration:none;font-weight:600;">→ En savoir plus sur ADOWE</a>
-              <span style="color:#cbd5e1;margin:0 8px;">·</span>
-              <span style="color:#94a3b8;font-size:12px;">demo.adowe.fr</span>
-            </div>
           </div>
 
         </div>`,
