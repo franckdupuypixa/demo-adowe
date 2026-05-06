@@ -1,22 +1,24 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 
-export default function Timer({ startTime }: { startTime: number }) {
-  const router = useRouter();
+export default function Timer({ startTime, onExpire }: { startTime: number; onExpire: () => void }) {
   const [ms, setMs] = useState(0);
+  const [expired, setExpired] = useState(false);
 
   useEffect(() => {
     const SESSION = 15 * 60 * 1000;
     const tick = () => {
       const left = Math.max(0, SESSION - (Date.now() - startTime));
       setMs(left);
-      if (left === 0) router.push("/lab/fin");
+      if (left === 0 && !expired) {
+        setExpired(true);
+        onExpire();
+      }
     };
     tick();
     const id = setInterval(tick, 1000);
     return () => clearInterval(id);
-  }, [startTime, router]);
+  }, [startTime, onExpire, expired]);
 
   const mins = Math.floor(ms / 60000);
   const secs = Math.floor((ms % 60000) / 1000);
@@ -25,7 +27,6 @@ export default function Timer({ startTime }: { startTime: number }) {
 
   return (
     <div className="flex items-center gap-3">
-      {/* Arc progress */}
       <div className="relative w-8 h-8">
         <svg className="w-8 h-8 -rotate-90" viewBox="0 0 32 32">
           <circle cx="16" cy="16" r="12" fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="2.5" />

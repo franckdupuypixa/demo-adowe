@@ -3,7 +3,7 @@ import { useState, useRef, useEffect } from "react";
 
 interface Message { role: "user" | "assistant"; content: string }
 
-export default function ChatbotModule({ entreprise, secteur }: { entreprise: string; secteur: string }) {
+export default function ChatbotModule({ entreprise, secteur, onComplete }: { entreprise: string; secteur: string; onComplete?: () => void }) {
   const [config, setConfig] = useState({ botName: "", activite: "", faq1: "", faq2: "", faq3: "" });
   const [configured, setConfigured] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -43,6 +43,7 @@ Si on te demande quelque chose en dehors de ton domaine, redirige poliment vers 
     const data = await res.json();
     setMessages(m => [...m, { role: "assistant", content: data.reply }]);
     setLoading(false);
+    onComplete?.();
   };
 
   if (!configured) {

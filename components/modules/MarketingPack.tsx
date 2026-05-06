@@ -8,7 +8,7 @@ interface Result {
   gmb: string;
 }
 
-export default function MarketingPack({ entreprise, secteur }: { entreprise: string; secteur: string }) {
+export default function MarketingPack({ entreprise, secteur, onComplete }: { entreprise: string; secteur: string; onComplete?: (result: Result) => void }) {
   const [desc, setDesc] = useState("");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<Result | null>(null);
@@ -33,6 +33,7 @@ export default function MarketingPack({ entreprise, secteur }: { entreprise: str
       const data = await res.json();
       if (data.result) {
         setResult(data.result);
+        onComplete?.(data.result);
       } else {
         setError("Erreur de génération. Réessayez.");
       }

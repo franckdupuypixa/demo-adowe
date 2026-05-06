@@ -37,7 +37,7 @@ interface AuditResult {
   potentiel: string;
 }
 
-export default function BusinessAudit({ entreprise, secteur, siteUrl }: { entreprise: string; secteur: string; siteUrl: string }) {
+export default function BusinessAudit({ entreprise, secteur, siteUrl, onComplete }: { entreprise: string; secteur: string; siteUrl: string; onComplete?: (result: AuditResult) => void }) {
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<AuditResult | null>(null);
@@ -55,6 +55,7 @@ export default function BusinessAudit({ entreprise, secteur, siteUrl }: { entrep
     const data = await res.json();
     setResult(data.result);
     setLoading(false);
+    onComplete?.(data.result);
   };
 
   const scoreColor = (s: number) => s >= 70 ? "text-green-400" : s >= 40 ? "text-yellow-400" : "text-red-400";

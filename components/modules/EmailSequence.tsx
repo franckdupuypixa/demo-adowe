@@ -6,7 +6,7 @@ interface EmailResult {
   body: string;
 }
 
-export default function EmailSequence({ email, entreprise, secteur }: { email: string; entreprise: string; secteur: string }) {
+export default function EmailSequence({ email, entreprise, secteur, onComplete }: { email: string; entreprise: string; secteur: string; onComplete?: (emails: EmailResult[]) => void }) {
   const [offre, setOffre] = useState("");
   const [cible, setCible] = useState("");
   const [loading, setLoading] = useState(false);
@@ -28,6 +28,7 @@ export default function EmailSequence({ email, entreprise, secteur }: { email: s
     setEmails(data.emails);
     setSent(data.sent);
     setLoading(false);
+    onComplete?.(data.emails);
   };
 
   const TABS = ["Email 1 — Bienvenue", "Email 2 — Relance", "Email 3 — Offre finale"];
