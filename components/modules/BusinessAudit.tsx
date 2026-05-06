@@ -2,11 +2,36 @@
 import { useState } from "react";
 
 const QUESTIONS = [
-  { key: "site", label: "Avez-vous un site web ?", options: ["Oui, récent et optimisé", "Oui, mais ancien / pas optimisé", "Non, pas encore"] },
-  { key: "reseaux", label: "Présence sur les réseaux sociaux ?", options: ["Active (posts réguliers)", "Présent mais peu actif", "Absente"] },
-  { key: "avis", label: "Avis Google / réputation en ligne ?", options: ["+20 avis positifs", "Quelques avis", "Pas ou peu d'avis"] },
-  { key: "prospect", label: "Comment trouvez-vous vos clients ?", options: ["Bouche-à-oreille principalement", "Mix digital + bouche-à-oreille", "Via Google / publicité digitale"] },
-  { key: "budget", label: "Budget marketing mensuel ?", options: ["0€ (pas d'investissement)", "< 500€/mois", "> 500€/mois"] },
+  {
+    key: "site",
+    label: "Votre site web",
+    sublabel: "Un site récent et optimisé génère des contacts automatiquement via Google.",
+    options: ["Oui, récent et bien référencé sur Google", "Oui, mais ancien ou invisible sur Google", "Non, je n'ai pas de site"],
+  },
+  {
+    key: "reseaux",
+    label: "Vos réseaux sociaux",
+    sublabel: "Une présence active sur LinkedIn ou Instagram crée de la confiance et attire des clients.",
+    options: ["Actif — je poste régulièrement", "Présent mais peu actif (moins d'1 post/mois)", "Absent des réseaux sociaux"],
+  },
+  {
+    key: "avis",
+    label: "Vos avis Google",
+    sublabel: "80% des clients lisent les avis avant de contacter une entreprise.",
+    options: ["+20 avis positifs sur Google", "Quelques avis (moins de 10)", "Pas d'avis ou fiche Google non réclamée"],
+  },
+  {
+    key: "prospect",
+    label: "Comment vous trouvez vos clients",
+    sublabel: "Dépendre uniquement du bouche-à-oreille limite fortement votre croissance.",
+    options: ["Uniquement par bouche-à-oreille", "Mélange bouche-à-oreille et digital", "Principalement via Google / publicité en ligne"],
+  },
+  {
+    key: "budget",
+    label: "Votre investissement marketing",
+    sublabel: "Les entreprises qui investissent dans leur visibilité digitale croissent 2x plus vite.",
+    options: ["0€ — je n'investis pas dans le marketing", "Moins de 500€/mois", "Plus de 500€/mois"],
+  },
 ];
 
 interface AuditResult {
@@ -43,18 +68,22 @@ export default function BusinessAudit({ entreprise, secteur }: { entreprise: str
 
   return (
     <div className="space-y-5">
-      <p className="text-slate-400 text-sm font-inter leading-relaxed">
-        Répondez à 5 questions — l&apos;IA analyse votre maturité digitale et vous donne un plan d&apos;action concret.
-      </p>
+      <div className="bg-white/[0.03] border border-[#00c2ff]/20 rounded-xl p-4 mb-2">
+        <p className="text-white text-sm font-syne font-semibold mb-1">Comment fonctionne cet audit ?</p>
+        <p className="text-slate-400 text-sm font-inter leading-relaxed">
+          Répondez à 5 questions sur votre situation actuelle. L&apos;IA calcule votre <strong className="text-white">score de visibilité digitale</strong> sur 100 et génère un plan d&apos;action personnalisé avec les priorités concrètes pour développer votre activité en ligne.
+        </p>
+      </div>
 
       {!result ? (
         <>
           <div className="space-y-4">
             {QUESTIONS.map((q, i) => (
               <div key={q.key} className="bg-white/[0.02] border border-white/[0.07] rounded-xl p-4">
-                <p className="text-white text-sm font-inter font-medium mb-3">
+                <p className="text-white text-sm font-inter font-medium mb-1">
                   <span className="text-[#00c2ff]/50 mr-2 font-mono">{i + 1}.</span>{q.label}
                 </p>
+                <p className="text-slate-500 text-xs font-inter mb-3 ml-5">{q.sublabel}</p>
                 <div className="flex flex-col sm:flex-row gap-2">
                   {q.options.map(opt => (
                     <button
