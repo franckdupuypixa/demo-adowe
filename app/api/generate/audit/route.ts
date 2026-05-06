@@ -1,44 +1,28 @@
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 
-export const runtime = "edge";
-export const maxDuration = 30;
-
 export async function POST(req: NextRequest) {
-  const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY, timeout: 50000 });
+  const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
   try {
     const { entreprise, secteur, answers } = await req.json();
 
-    const prompt = `Consultant digital expert "${secteur}". Analyse maturité digitale de "${entreprise}":
-- Site: ${answers.site} | Réseaux: ${answers.reseaux} | Avis Google: ${answers.avis} | Clients: ${answers.prospect} | Budget: ${answers.budget}
+    const prompt = `Consultant digital "${secteur}". Maturité digitale "${entreprise}": site=${answers.site}, réseaux=${answers.reseaux}, avis=${answers.avis}, clients=${answers.prospect}, budget=${answers.budget}
 
 JSON uniquement:
-{
-  "score": <0-100>,
-  "synthese": "2 phrases personnalisées",
-  "points_forts": ["Point 1", "Point 2", "Point 3"],
-  "axes_amelioration": ["Axe 1", "Axe 2", "Axe 3"],
-  "plan_action": [
-    {"priorite": "URGENT", "action": "Action précise", "impact": "Impact mesurable"},
-    {"priorite": "IMPORTANT", "action": "Action précise", "impact": "Impact"},
-    {"priorite": "MOYEN TERME", "action": "Action précise", "impact": "Impact"}
-  ],
-  "potentiel": "2 phrases sur le potentiel de croissance"
-}`;
+{"score":75,"synthese":"2 phrases","points_forts":["p1","p2","p3"],"axes_amelioration":["a1","a2","a3"],"plan_action":[{"priorite":"URGENT","action":"action","impact":"impact"},{"priorite":"IMPORTANT","action":"action","impact":"impact"},{"priorite":"MOYEN TERME","action":"action","impact":"impact"}],"potentiel":"2 phrases"}`;
 
     const response = await client.chat.completions.create({
-      model: "gpt-4o-mini",
-      max_tokens: 800,
+      model: "gpt-3.5-turbo",
+      max_tokens: 700,
       response_format: { type: "json_object" },
       messages: [{ role: "user", content: prompt }],
     });
 
     const text = response.choices[0].message.content || "{}";
     const result = JSON.parse(text);
-
     return NextResponse.json({ result });
   } catch (err) {
-    console.error("Audit generate error:", err);
-    return NextResponse.json({ error: "Erreur de génération" }, { status: 500 });
+    console.error("Audit error:", err);
+    return NextResponse.json({ error: String(err) }, { status: 500 });
   }
 }
