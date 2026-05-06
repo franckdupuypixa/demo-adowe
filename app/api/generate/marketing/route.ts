@@ -7,18 +7,20 @@ export async function POST(req: NextRequest) {
     const { entreprise, secteur, description } = await req.json();
 
     const prompt = `Tu es un expert LinkedIn et marketing digital pour le secteur "${secteur}".
-Crée un pack marketing complet et professionnel pour "${entreprise}" : ${description}
+Crée un pack marketing pour "${entreprise}" : ${description}
+
+IMPORTANT : chaque post LinkedIn doit faire EXACTEMENT 200 mots minimum. Compte bien les mots.
 
 Réponds en JSON uniquement :
 {
-  "tagline": "Slogan percutant et mémorable, max 10 mots",
+  "tagline": "Slogan percutant max 10 mots",
   "linkedin": [
-    "Post LinkedIn 1 : storytelling émotionnel, commence par une accroche forte, développe en 200 mots avec des chiffres concrets, se termine par une question engageante. Utilise des emojis et 5 hashtags professionnels.",
-    "Post LinkedIn 2 : angle conseil/expertise, partage 3 conseils pratiques du secteur, 200 mots, ton professionnel et chaleureux, emojis, 5 hashtags.",
-    "Post LinkedIn 3 : témoignage ou cas client fictif mais réaliste, résultat chiffré, 200 mots, call-to-action clair, emojis, 5 hashtags."
+    "Post LinkedIn 1 COMPLET (200 mots minimum) : commence par une accroche choc sur une ligne seule, saute une ligne, développe avec une histoire personnelle ou anecdote du secteur, chiffres concrets, paragraphes courts, termine par une question pour engager la communauté. 5 hashtags professionnels à la fin.",
+    "Post LinkedIn 2 COMPLET (200 mots minimum) : angle conseil pratique, titre accrocheur, liste de 3 à 5 conseils numérotés avec explication pour chacun, conclusion avec call-to-action. Emojis, 5 hashtags.",
+    "Post LinkedIn 3 COMPLET (200 mots minimum) : format témoignage client fictif réaliste, présente le problème du client, la solution apportée, le résultat chiffré, citation du client entre guillemets, conclusion et call-to-action. Emojis, 5 hashtags."
   ],
-  "email": "Objet: [objet accrocheur]\n\nCorps de l'email de prospection en 150 mots, personnalisé, professionnel, avec appel à l'action clair",
-  "gmb": "Description Google My Business 120 mots avec mots-clés du secteur et appel à l'action"
+  "email": "Objet: [objet accrocheur]\n\n[Corps email 150 mots avec appel à l'action]",
+  "gmb": "Description Google My Business 120 mots avec mots-clés secteur et appel à l'action"
 }`;
 
     const response = await client.chat.completions.create({

@@ -7,9 +7,9 @@ export async function POST(req: NextRequest) {
     const { messages, systemPrompt } = await req.json();
     const response = await client.chat.completions.create({
       model: "gpt-3.5-turbo",
-      max_tokens: 150,
+      max_tokens: 80,
       messages: [
-        { role: "system", content: systemPrompt },
+        { role: "system", content: systemPrompt + "\n\nRègle absolue : réponds en 2-3 phrases maximum, jamais plus." },
         ...messages.map((m: { role: string; content: string }) => ({
           role: m.role as "user" | "assistant",
           content: m.content,
