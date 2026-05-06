@@ -1,24 +1,26 @@
 import { NextRequest, NextResponse } from "next/server";
-import Anthropic from "@anthropic-ai/sdk";
+import OpenAI from "openai";
 
 export async function POST(req: NextRequest) {
-  const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+  const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
   try {
     const { messages, systemPrompt } = await req.json();
 
-    const anthropicMessages = messages.map((m: { role: string; content: string }) => ({
-      role: m.role as "user" | "assistant",
-      content: m.content,
-    }));
+    const openaiMessages = [
+      { role: "system" as const, content: systemPrompt },
+      ...messages.map((m: { role: string; content: string }) => ({
+        role: m.role as "user" | "assistant",
+        content: m.content,
+      })),
+    ];
 
-    const response = await client.messages.create({
-      model: "claude-haiku-4-5",
+    const response = await client.chat.completions.create({
+      model: "gpt-4o-mini",
       max_tokens: 300,
-      system: systemPrompt,
-      messages: anthropicMessages,
+      messages: openaiMessages,
     });
 
-    const reply = response.content[0].type === "text" ? response.content[0].text : "Je n'ai pas compris votre question.";
+    const reply = response.choices[0].message.content || "Je n'ai pas compris votre question.";
     return NextResponse.json({ reply });
   } catch (err) {
     console.error("Chatbot error:", err);

@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import Anthropic from "@anthropic-ai/sdk";
+import OpenAI from "openai";
 import { Resend } from "resend";
 
 export async function POST(req: NextRequest) {
-  const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+  const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
   const resend = new Resend(process.env.RESEND_API_KEY);
   try {
     const { entreprise, secteur, offre, cible, email } = await req.json();
@@ -31,14 +31,15 @@ Réponds UNIQUEMENT avec un JSON valide, sans markdown :
   ]
 }`;
 
-    const message = await client.messages.create({
-      model: "claude-opus-4-5",
+    const response = await client.chat.completions.create({
+      model: "gpt-4o-mini",
       max_tokens: 1500,
+      response_format: { type: "json_object" },
       messages: [{ role: "user", content: prompt }],
     });
 
-    const text = message.content[0].type === "text" ? message.content[0].text : "";
-    const { emails } = JSON.parse(text.trim());
+    const text = response.choices[0].message.content || "{}";
+    const { emails } = JSON.parse(text);
 
     // Envoyer le premier email au participant
     let sent = false;

@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import Anthropic from "@anthropic-ai/sdk";
+import OpenAI from "openai";
 
 export async function POST(req: NextRequest) {
-  const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+  const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
   try {
     const { entreprise, secteur, answers } = await req.json();
 
@@ -29,14 +29,15 @@ Génère un audit complet et personnalisé. Réponds UNIQUEMENT avec un JSON val
   "potentiel": "Description du potentiel de croissance digitale spécifique à ce profil (2-3 phrases encourageantes et chiffrées si possible)"
 }`;
 
-    const message = await client.messages.create({
-      model: "claude-opus-4-5",
+    const response = await client.chat.completions.create({
+      model: "gpt-4o-mini",
       max_tokens: 1200,
+      response_format: { type: "json_object" },
       messages: [{ role: "user", content: prompt }],
     });
 
-    const text = message.content[0].type === "text" ? message.content[0].text : "";
-    const result = JSON.parse(text.trim());
+    const text = response.choices[0].message.content || "{}";
+    const result = JSON.parse(text);
 
     return NextResponse.json({ result });
   } catch (err) {

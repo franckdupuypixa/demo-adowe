@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import Anthropic from "@anthropic-ai/sdk";
+import OpenAI from "openai";
 
 export async function POST(req: NextRequest) {
-  const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+  const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
   try {
     const { entreprise, secteur, description } = await req.json();
 
@@ -24,14 +24,15 @@ Réponds UNIQUEMENT avec un objet JSON valide, sans markdown, sans code block, e
   "gmb": "Description Google My Business (150-200 mots, inclut les mots-clés du secteur, appel à l'action)"
 }`;
 
-    const message = await client.messages.create({
-      model: "claude-opus-4-5",
+    const response = await client.chat.completions.create({
+      model: "gpt-4o-mini",
       max_tokens: 2000,
+      response_format: { type: "json_object" },
       messages: [{ role: "user", content: prompt }],
     });
 
-    const text = message.content[0].type === "text" ? message.content[0].text : "";
-    const result = JSON.parse(text.trim());
+    const text = response.choices[0].message.content || "{}";
+    const result = JSON.parse(text);
 
     return NextResponse.json({ result });
   } catch (err) {
