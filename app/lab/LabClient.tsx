@@ -132,7 +132,7 @@ export default function LabClient({ startTime, userData }: Props) {
           {activeModule === "marketing" && <MarketingPack entreprise={entreprise} secteur={secteur} />}
           {activeModule === "chatbot" && <ChatbotModule entreprise={entreprise} secteur={secteur} />}
           {activeModule === "email" && <EmailSequence email={email} entreprise={entreprise} secteur={secteur} />}
-          {activeModule === "audit" && <BusinessAudit entreprise={entreprise} secteur={secteur} />}
+          {activeModule === "audit" && <BusinessAudit entreprise={entreprise} secteur={secteur} siteUrl={userData.siteUrl || ""} />}
         </div>
 
         {/* Footer CTA */}

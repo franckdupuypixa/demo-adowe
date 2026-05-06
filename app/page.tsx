@@ -17,7 +17,7 @@ const SECTEURS = [
 
 export default function RegisterPage() {
   const router = useRouter();
-  const [form, setForm] = useState({ prenom: "", nom: "", email: "", entreprise: "", secteur: "" });
+  const [form, setForm] = useState({ prenom: "", nom: "", email: "", entreprise: "", secteur: "", siteUrl: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -128,6 +128,17 @@ export default function RegisterPage() {
                 <option value="" disabled>Choisissez votre secteur…</option>
                 {SECTEURS.map(s => <option key={s} value={s}>{s}</option>)}
               </select>
+            </div>
+
+            {/* Site internet */}
+            <div>
+              <label className="text-[#00c2ff]/70 text-xs font-inter mb-1.5 block">Site internet <span className="text-slate-600">(optionnel)</span></label>
+              <input
+                value={form.siteUrl}
+                onChange={e => set("siteUrl", e.target.value)}
+                placeholder="www.monentreprise.fr"
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-600 font-inter outline-none focus:border-[#00c2ff]/50 transition-colors"
+              />
             </div>
 
             {error && (

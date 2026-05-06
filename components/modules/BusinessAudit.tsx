@@ -3,12 +3,6 @@ import { useState } from "react";
 
 const QUESTIONS = [
   {
-    key: "site",
-    label: "Votre site web",
-    sublabel: "Un site récent et optimisé génère des contacts automatiquement via Google.",
-    options: ["Oui, récent et bien référencé sur Google", "Oui, mais ancien ou invisible sur Google", "Non, je n'ai pas de site"],
-  },
-  {
     key: "reseaux",
     label: "Vos réseaux sociaux",
     sublabel: "Une présence active sur LinkedIn ou Instagram crée de la confiance et attire des clients.",
@@ -43,7 +37,7 @@ interface AuditResult {
   potentiel: string;
 }
 
-export default function BusinessAudit({ entreprise, secteur }: { entreprise: string; secteur: string }) {
+export default function BusinessAudit({ entreprise, secteur, siteUrl }: { entreprise: string; secteur: string; siteUrl: string }) {
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<AuditResult | null>(null);
@@ -56,7 +50,7 @@ export default function BusinessAudit({ entreprise, secteur }: { entreprise: str
     const res = await fetch("/api/generate/audit", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ entreprise, secteur, answers }),
+      body: JSON.stringify({ entreprise, secteur, answers, siteUrl }),
     });
     const data = await res.json();
     setResult(data.result);
@@ -71,8 +65,14 @@ export default function BusinessAudit({ entreprise, secteur }: { entreprise: str
       <div className="bg-white/[0.03] border border-[#00c2ff]/20 rounded-xl p-4 mb-2">
         <p className="text-white text-sm font-syne font-semibold mb-1">Comment fonctionne cet audit ?</p>
         <p className="text-slate-400 text-sm font-inter leading-relaxed">
-          Répondez à 5 questions sur votre situation actuelle. L&apos;IA calcule votre <strong className="text-white">score de visibilité digitale</strong> sur 100 et génère un plan d&apos;action personnalisé avec les priorités concrètes pour développer votre activité en ligne.
+          Répondez à 4 questions sur votre situation actuelle. L&apos;IA calcule votre <strong className="text-white">score de visibilité digitale</strong> sur 100 et génère un plan d&apos;action personnalisé concret.
         </p>
+        {siteUrl && (
+          <div className="flex items-center gap-2 mt-3 bg-green-500/10 border border-green-500/20 rounded-lg px-3 py-2">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4ade80" strokeWidth="2.5"><path d="M20 6 9 17l-5-5"/></svg>
+            <p className="text-green-400 text-xs font-inter">Votre site <strong>{siteUrl}</strong> sera analysé automatiquement</p>
+          </div>
+        )}
       </div>
 
       {!result ? (
