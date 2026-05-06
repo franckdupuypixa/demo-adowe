@@ -1,32 +1,27 @@
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 
+export const maxDuration = 60;
+
 export async function POST(req: NextRequest) {
   const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
   try {
     const { entreprise, secteur, description } = await req.json();
 
-    const prompt = `Tu es un expert en marketing digital pour les entreprises du secteur "${secteur}".
+    const prompt = `Tu es un expert en marketing digital pour le secteur "${secteur}".
+Génère un pack marketing pour "${entreprise}" : ${description}
 
-Génère un pack marketing complet et professionnel pour l'entreprise "${entreprise}".
-
-Description de leur activité : ${description}
-
-Réponds UNIQUEMENT avec un objet JSON valide, sans markdown, sans code block, exactement dans ce format :
+JSON uniquement, sans markdown :
 {
-  "tagline": "Un slogan court et percutant (max 10 mots)",
-  "linkedin": [
-    "Post LinkedIn 1 (200-250 mots, accrocheur, avec émojis, hashtags à la fin)",
-    "Post LinkedIn 2 (200-250 mots, différent angle, avec émojis, hashtags à la fin)",
-    "Post LinkedIn 3 (200-250 mots, encore différent, avec émojis, hashtags à la fin)"
-  ],
-  "email": "Email de prospection complet (Objet inclus en première ligne commençant par 'Objet : ', puis le corps, 200-250 mots, professionnel et chaleureux)",
-  "gmb": "Description Google My Business (150-200 mots, inclut les mots-clés du secteur, appel à l'action)"
+  "tagline": "Slogan percutant max 10 mots",
+  "linkedin": ["Post LinkedIn 1 avec émojis et hashtags (150 mots)", "Post LinkedIn 2 angle différent (150 mots)", "Post LinkedIn 3 angle différent (150 mots)"],
+  "email": "Email prospection avec objet en première ligne 'Objet: ...' puis corps (150 mots)",
+  "gmb": "Description Google My Business 100 mots avec mots-clés secteur"
 }`;
 
     const response = await client.chat.completions.create({
       model: "gpt-4o-mini",
-      max_tokens: 2000,
+      max_tokens: 1500,
       response_format: { type: "json_object" },
       messages: [{ role: "user", content: prompt }],
     });

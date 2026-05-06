@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 
+export const maxDuration = 30;
+
 export async function POST(req: NextRequest) {
   const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
   try {
@@ -16,11 +18,11 @@ export async function POST(req: NextRequest) {
 
     const response = await client.chat.completions.create({
       model: "gpt-4o-mini",
-      max_tokens: 300,
+      max_tokens: 200,
       messages: openaiMessages,
     });
 
-    const reply = response.choices[0].message.content || "Je n'ai pas compris votre question.";
+    const reply = response.choices[0].message.content || "Je n'ai pas compris.";
     return NextResponse.json({ reply });
   } catch (err) {
     console.error("Chatbot error:", err);

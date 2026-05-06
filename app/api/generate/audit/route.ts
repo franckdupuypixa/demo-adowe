@@ -1,37 +1,33 @@
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 
+export const maxDuration = 60;
+
 export async function POST(req: NextRequest) {
   const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
   try {
     const { entreprise, secteur, answers } = await req.json();
 
-    const prompt = `Tu es un consultant en stratégie digitale senior, expert du secteur "${secteur}".
+    const prompt = `Consultant digital expert "${secteur}". Analyse maturité digitale de "${entreprise}":
+- Site: ${answers.site} | Réseaux: ${answers.reseaux} | Avis Google: ${answers.avis} | Clients: ${answers.prospect} | Budget: ${answers.budget}
 
-Analyse la maturité digitale de l'entreprise "${entreprise}" selon ces réponses :
-- Site web : ${answers.site}
-- Réseaux sociaux : ${answers.reseaux}
-- Avis Google : ${answers.avis}
-- Acquisition clients : ${answers.prospect}
-- Budget marketing : ${answers.budget}
-
-Génère un audit complet et personnalisé. Réponds UNIQUEMENT avec un JSON valide, sans markdown :
+JSON uniquement:
 {
-  "score": <nombre entre 0 et 100>,
-  "synthese": "Synthèse en 2-3 phrases, personnalisée pour cette entreprise et ce secteur",
-  "points_forts": ["Point fort 1 spécifique", "Point fort 2", "Point fort 3"],
-  "axes_amelioration": ["Axe 1 concret et actionnable", "Axe 2", "Axe 3"],
+  "score": <0-100>,
+  "synthese": "2 phrases personnalisées",
+  "points_forts": ["Point 1", "Point 2", "Point 3"],
+  "axes_amelioration": ["Axe 1", "Axe 2", "Axe 3"],
   "plan_action": [
-    { "priorite": "URGENT", "action": "Action concrète et précise", "impact": "Impact attendu mesurable" },
-    { "priorite": "IMPORTANT", "action": "Action concrète", "impact": "Impact attendu" },
-    { "priorite": "MOYEN TERME", "action": "Action concrète", "impact": "Impact attendu" }
+    {"priorite": "URGENT", "action": "Action précise", "impact": "Impact mesurable"},
+    {"priorite": "IMPORTANT", "action": "Action précise", "impact": "Impact"},
+    {"priorite": "MOYEN TERME", "action": "Action précise", "impact": "Impact"}
   ],
-  "potentiel": "Description du potentiel de croissance digitale spécifique à ce profil (2-3 phrases encourageantes et chiffrées si possible)"
+  "potentiel": "2 phrases sur le potentiel de croissance"
 }`;
 
     const response = await client.chat.completions.create({
       model: "gpt-4o-mini",
-      max_tokens: 1200,
+      max_tokens: 800,
       response_format: { type: "json_object" },
       messages: [{ role: "user", content: prompt }],
     });

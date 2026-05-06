@@ -2,38 +2,28 @@ import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 import { Resend } from "resend";
 
+export const maxDuration = 60;
+
 export async function POST(req: NextRequest) {
   const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
   const resend = new Resend(process.env.RESEND_API_KEY);
   try {
     const { entreprise, secteur, offre, cible, email } = await req.json();
 
-    const prompt = `Tu es un expert en email marketing pour le secteur "${secteur}".
+    const prompt = `Expert email marketing "${secteur}". Séquence 3 emails pour "${entreprise}", offre: ${offre}. ${cible ? `Cible: ${cible}` : ""}
 
-Génère une séquence de 3 emails automatisés pour l'entreprise "${entreprise}" avec l'offre suivante : ${offre}.
-${cible ? `Cible client : ${cible}` : ""}
-
-Réponds UNIQUEMENT avec un JSON valide, sans markdown :
+JSON uniquement:
 {
   "emails": [
-    {
-      "subject": "Objet email 1 (accrocheur)",
-      "body": "Corps de l'email 1 - Bienvenue (150-200 mots, chaleureux, présente l'entreprise et l'offre)"
-    },
-    {
-      "subject": "Objet email 2 (relance douce J+3)",
-      "body": "Corps de l'email 2 - Relance (120-150 mots, rappelle la valeur, témoignage ou preuve sociale)"
-    },
-    {
-      "subject": "Objet email 3 (urgence douce J+7)",
-      "body": "Corps de l'email 3 - Offre finale (120-150 mots, CTA fort, sentiment d'urgence subtil)"
-    }
+    {"subject": "Objet email 1", "body": "Corps email bienvenue 120 mots"},
+    {"subject": "Objet email 2 relance J+3", "body": "Corps relance 100 mots"},
+    {"subject": "Objet email 3 offre finale J+7", "body": "Corps offre finale 100 mots"}
   ]
 }`;
 
     const response = await client.chat.completions.create({
       model: "gpt-4o-mini",
-      max_tokens: 1500,
+      max_tokens: 1000,
       response_format: { type: "json_object" },
       messages: [{ role: "user", content: prompt }],
     });
@@ -41,24 +31,17 @@ Réponds UNIQUEMENT avec un JSON valide, sans markdown :
     const text = response.choices[0].message.content || "{}";
     const { emails } = JSON.parse(text);
 
-    // Envoyer le premier email au participant
     let sent = false;
     try {
       await resend.emails.send({
         from: "ADOWE Lab <onboarding@resend.dev>",
         to: email,
         subject: `[Démonstration ADOWE Lab] ${emails[0].subject}`,
-        html: `
-          <div style="font-family:Inter,sans-serif;max-width:600px;margin:0 auto;background:#ffffff;color:#1e293b;padding:40px 32px;border-radius:8px;">
-            <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:12px 16px;margin-bottom:28px;">
-              <p style="margin:0;font-size:12px;color:#94a3b8;">🧪 <strong>Ceci est un email de démonstration</strong> généré par ADOWE Lab pour ${entreprise}. En situation réelle, il serait envoyé automatiquement à vos prospects.</p>
-            </div>
-            <pre style="white-space:pre-wrap;font-family:Inter,sans-serif;font-size:14px;line-height:1.8;color:#334155;margin:0;">${emails[0].body}</pre>
-            <div style="margin-top:28px;padding-top:20px;border-top:1px solid #f1f5f9;">
-              <p style="margin:0;font-size:12px;color:#94a3b8;">Généré par <strong>ADOWE Lab</strong> · demo.adowe.fr</p>
-            </div>
-          </div>
-        `,
+        html: `<div style="font-family:Inter,sans-serif;max-width:600px;margin:0 auto;padding:32px;">
+          <p style="background:#f8fafc;border-radius:8px;padding:12px;font-size:12px;color:#94a3b8;">🧪 Email de démonstration généré par ADOWE Lab pour ${entreprise}.</p>
+          <pre style="white-space:pre-wrap;font-size:14px;line-height:1.8;color:#334155;">${emails[0].body}</pre>
+          <p style="font-size:11px;color:#94a3b8;margin-top:24px;">Généré par ADOWE Lab · demo.adowe.fr</p>
+        </div>`,
       });
       sent = true;
     } catch (e) {
