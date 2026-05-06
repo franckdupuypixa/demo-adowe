@@ -1,5 +1,6 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import LoadingAI from "@/components/LoadingAI";
 
 interface Result {
   tagline: string;
@@ -14,6 +15,7 @@ export default function MarketingPack({ entreprise, secteur, onComplete }: { ent
   const [result, setResult] = useState<Result | null>(null);
   const [copied, setCopied] = useState("");
   const [error, setError] = useState("");
+  const [celebrate, setCelebrate] = useState(false);
 
   const generate = async () => {
     if (!desc.trim()) return;
@@ -33,6 +35,8 @@ export default function MarketingPack({ entreprise, secteur, onComplete }: { ent
       const data = await res.json();
       if (data.result) {
         setResult(data.result);
+        setCelebrate(true);
+        setTimeout(() => setCelebrate(false), 2000);
         onComplete?.(data.result);
       } else {
         setError("Erreur de génération. Réessayez.");
@@ -78,20 +82,33 @@ export default function MarketingPack({ entreprise, secteur, onComplete }: { ent
           disabled={loading || !desc.trim()}
           className="mt-3 px-6 py-3 rounded-xl bg-gradient-to-r from-[#00c2ff] to-[#8b5cf6] text-white font-syne font-bold text-sm hover:opacity-90 disabled:opacity-40 transition-all shadow-[0_0_20px_rgba(0,194,255,0.2)]"
         >
-          {loading ? (
-            <span className="flex items-center gap-2">
-              <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="white" strokeWidth="4"/><path className="opacity-75" fill="white" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
-              L&apos;IA génère votre pack…
-            </span>
-          ) : "✨ Générer mon pack marketing"}
+          ✨ Générer mon pack marketing
         </button>
+
+        {loading && (
+          <LoadingAI messages={[
+            "🔍 Analyse de votre secteur d'activité…",
+            "✍️ Création de votre slogan impactant…",
+            "📱 Rédaction des posts LinkedIn…",
+            "📧 Préparation de l'email de prospection…",
+            "🗺️ Optimisation Google My Business…",
+            "✅ Finalisation de votre pack…",
+          ]} />
+        )}
         {error && (
           <p className="mt-3 text-red-400 text-xs font-inter bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2">{error}</p>
         )}
       </div>
 
       {result && (
-        <div className="space-y-4 pt-2">
+        <div className={`space-y-4 pt-2 transition-all duration-700 ${celebrate ? "animate-pulse" : ""}`}
+          style={celebrate ? { filter: "drop-shadow(0 0 24px rgba(0,194,255,0.4))" } : {}}>
+          {celebrate && (
+            <div className="flex items-center gap-3 bg-green-500/10 border border-green-500/30 rounded-xl px-4 py-3 animate-pulse">
+              <span className="text-2xl">🎉</span>
+              <p className="text-green-400 font-syne font-bold text-sm">Pack marketing généré avec succès !</p>
+            </div>
+          )}
           {/* Tagline */}
           <div className="bg-white/[0.03] border border-[#00c2ff]/20 rounded-xl p-4">
             <div className="flex items-center justify-between mb-2">

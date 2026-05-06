@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import LoadingAI from "@/components/LoadingAI";
 
 interface EmailResult {
   subject: string;
@@ -13,6 +14,7 @@ export default function EmailSequence({ email, entreprise, secteur, onComplete }
   const [emails, setEmails] = useState<EmailResult[] | null>(null);
   const [sent, setSent] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
+  const [celebrate, setCelebrate] = useState(false);
 
   const generate = async () => {
     if (!offre.trim()) return;
@@ -27,6 +29,8 @@ export default function EmailSequence({ email, entreprise, secteur, onComplete }
     const data = await res.json();
     setEmails(data.emails);
     setSent(data.sent);
+    setCelebrate(true);
+    setTimeout(() => setCelebrate(false), 2000);
     setLoading(false);
     onComplete?.(data.emails);
   };
@@ -67,16 +71,28 @@ export default function EmailSequence({ email, entreprise, secteur, onComplete }
         disabled={loading || !offre.trim()}
         className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#00c2ff] to-[#8b5cf6] text-white font-syne font-bold text-sm hover:opacity-90 disabled:opacity-40 transition-all shadow-[0_0_20px_rgba(0,194,255,0.2)]"
       >
-        {loading ? (
-          <span className="flex items-center gap-2">
-            <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="white" strokeWidth="4"/><path className="opacity-75" fill="white" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
-            Génération de la séquence…
-          </span>
-        ) : "📧 Générer ma séquence email automatisée"}
+          📧 Générer ma séquence email automatisée
       </button>
 
+      {loading && (
+        <LoadingAI messages={[
+          "✍️ Rédaction de l'email de bienvenue…",
+          "📨 Création de l'email de relance…",
+          "🎯 Préparation de l'offre finale…",
+          "🚀 Envoi de l'email de bienvenue à votre adresse…",
+          "✅ Séquence prête à l'emploi…",
+        ]} />
+      )}
+
       {emails && (
-        <div className="space-y-3">
+        <div className="space-y-3 transition-all duration-700"
+          style={celebrate ? { filter: "drop-shadow(0 0 24px rgba(0,194,255,0.35))" } : {}}>
+          {celebrate && (
+            <div className="flex items-center gap-3 bg-[#00c2ff]/10 border border-[#00c2ff]/30 rounded-xl px-4 py-3 animate-pulse">
+              <span className="text-2xl">📬</span>
+              <p className="text-[#00c2ff] font-syne font-bold text-sm">Séquence générée — l'email 1 a été envoyé !</p>
+            </div>
+          )}
           {sent && (
             <div className="flex items-center gap-2 bg-green-500/10 border border-green-500/20 rounded-xl px-4 py-3">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4ade80" strokeWidth="2.5"><path d="M20 6 9 17l-5-5"/></svg>

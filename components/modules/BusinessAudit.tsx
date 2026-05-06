@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import LoadingAI from "@/components/LoadingAI";
 
 const QUESTIONS = [
   {
@@ -41,6 +42,7 @@ export default function BusinessAudit({ entreprise, secteur, siteUrl, onComplete
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<AuditResult | null>(null);
+  const [celebrate, setCelebrate] = useState(false);
 
   const allAnswered = QUESTIONS.every(q => answers[q.key]);
 
@@ -54,6 +56,8 @@ export default function BusinessAudit({ entreprise, secteur, siteUrl, onComplete
     });
     const data = await res.json();
     setResult(data.result);
+    setCelebrate(true);
+    setTimeout(() => setCelebrate(false), 2500);
     setLoading(false);
     onComplete?.(data.result);
   };
@@ -109,16 +113,28 @@ export default function BusinessAudit({ entreprise, secteur, siteUrl, onComplete
             disabled={loading || !allAnswered}
             className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#00c2ff] to-[#8b5cf6] text-white font-syne font-bold text-sm hover:opacity-90 disabled:opacity-40 transition-all shadow-[0_0_20px_rgba(0,194,255,0.2)]"
           >
-            {loading ? (
-              <span className="flex items-center gap-2">
-                <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="white" strokeWidth="4"/><path className="opacity-75" fill="white" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
-                Analyse en cours…
-              </span>
-            ) : "📊 Analyser ma maturité digitale"}
+            📊 Analyser ma maturité digitale
           </button>
+
+          {loading && (
+            <LoadingAI messages={[
+              `🌐 Analyse du site ${siteUrl || "de votre entreprise"}…`,
+              "📊 Évaluation de votre présence digitale…",
+              "🔍 Identification des axes d'amélioration…",
+              "🎯 Élaboration de votre plan d'action…",
+              "✅ Calcul de votre score de maturité…",
+            ]} />
+          )}
         </>
       ) : (
-        <div className="space-y-4">
+        <div className={`space-y-4 transition-all duration-700`}
+          style={celebrate ? { filter: "drop-shadow(0 0 30px rgba(139,92,246,0.4))" } : {}}>
+          {celebrate && (
+            <div className="flex items-center gap-3 bg-[#8b5cf6]/10 border border-[#8b5cf6]/30 rounded-xl px-4 py-3 animate-pulse">
+              <span className="text-2xl">🎯</span>
+              <p className="text-[#8b5cf6] font-syne font-bold text-sm">Audit généré — voici votre diagnostic complet !</p>
+            </div>
+          )}
           {/* Site analysé */}
           {siteUrl && (
             <div className="flex items-center gap-2 bg-[#00c2ff]/10 border border-[#00c2ff]/20 rounded-xl px-4 py-3">
