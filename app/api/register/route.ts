@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
 
     // Email de vérification
     await resend.emails.send({
-      from: "ADOWE Lab <onboarding@resend.dev>",
+      from: "ADOWE Lab <lab@adowe.fr>",
       to: email,
       subject: `${code} — Votre code d'accès ADOWE Lab`,
       html: `
@@ -56,7 +56,7 @@ export async function POST(req: NextRequest) {
 
     // Notification à Franck
     await resend.emails.send({
-      from: "ADOWE Lab <onboarding@resend.dev>",
+      from: "ADOWE Lab <lab@adowe.fr>",
       to: "franckpierredupuy@gmail.com",
       subject: `🧪 Nouveau participant Lab — ${prenom} ${nom} (${entreprise})`,
       html: `

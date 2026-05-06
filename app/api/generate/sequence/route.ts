@@ -26,7 +26,7 @@ JSON uniquement:
     let sent = false;
     try {
       await resend.emails.send({
-        from: "ADOWE Lab <onboarding@resend.dev>",
+        from: "ADOWE Lab <lab@adowe.fr>",
         to: email,
         subject: emails[0].subject,
         html: `

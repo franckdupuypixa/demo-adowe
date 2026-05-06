@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
 
     // Email récap au client
     await resend.emails.send({
-      from: "ADOWE Lab <onboarding@resend.dev>",
+      from: "ADOWE Lab <lab@adowe.fr>",
       to: email,
       subject: `Votre récap ADOWE Lab — ${entreprise}`,
       html: `
@@ -89,7 +89,7 @@ export async function POST(req: NextRequest) {
 
     // Notification complète à Franck
     await resend.emails.send({
-      from: "ADOWE Lab <onboarding@resend.dev>",
+      from: "ADOWE Lab <lab@adowe.fr>",
       to: "franckpierredupuy@gmail.com",
       subject: `🧪 Session terminée — ${prenom} ${nom} (${entreprise})`,
       html: `
