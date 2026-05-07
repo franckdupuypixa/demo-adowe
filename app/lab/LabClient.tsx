@@ -51,6 +51,18 @@ export default function LabClient({ startTime, userData }: Props) {
 
   const completedCount = Object.keys(completed).length;
 
+  const currentIndex = MODULES.findIndex(m => m.id === activeModule);
+  const nextModule = MODULES[currentIndex + 1] ?? null;
+  const isLastModule = currentIndex === MODULES.length - 1;
+
+  const goNext = () => {
+    if (isLastModule) {
+      sendRecapAndRedirect();
+    } else {
+      setActiveModule(nextModule!.id);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#060612] flex flex-col">
       {/* Background */}
@@ -146,6 +158,23 @@ export default function LabClient({ startTime, userData }: Props) {
           {activeModule === "chatbot"   && <ChatbotModule entreprise={entreprise} secteur={secteur} onComplete={() => onModuleComplete("chatbot", true)} />}
           {activeModule === "email"     && <EmailSequence email={email} entreprise={entreprise} secteur={secteur} onComplete={r => onModuleComplete("email", r)} />}
           {activeModule === "audit"     && <BusinessAudit entreprise={entreprise} secteur={secteur} siteUrl={siteUrl || ""} onComplete={r => onModuleComplete("audit", r)} />}
+
+          {/* Bouton navigation module */}
+          {completed[activeModule] && (
+            <div className="mt-8 pt-6 border-t border-white/[0.07] flex justify-end">
+              <button
+                onClick={goNext}
+                disabled={sending}
+                className={`flex items-center gap-2 px-6 py-3 rounded-xl font-syne font-bold text-sm text-white transition-all shadow-[0_0_25px_rgba(0,194,255,0.2)] hover:opacity-90 disabled:opacity-50 ${
+                  isLastModule
+                    ? "bg-gradient-to-r from-[#8b5cf6] to-[#00c2ff]"
+                    : "bg-gradient-to-r from-[#00c2ff] to-[#8b5cf6]"
+                }`}
+              >
+                {sending ? "Envoi en cours…" : isLastModule ? "Valider la fin de l'expérience ✓" : `Module suivant — ${nextModule?.label} →`}
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Footer CTA */}
@@ -156,13 +185,6 @@ export default function LabClient({ startTime, userData }: Props) {
               <p className="text-slate-400 text-sm font-inter">ADOWE met en place ces solutions en moins de 48h.</p>
             </div>
             <div className="flex gap-3 shrink-0">
-              <button
-                onClick={sendRecapAndRedirect}
-                disabled={sending}
-                className="px-5 py-2.5 rounded-xl border border-white/20 text-white text-sm font-syne font-semibold hover:bg-white/5 transition-all disabled:opacity-50"
-              >
-                {sending ? "Envoi récap…" : "Terminer la session"}
-              </button>
               <a
                 href="https://adowe.fr/#contact"
                 target="_blank"
