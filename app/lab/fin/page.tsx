@@ -58,14 +58,14 @@ export default function FinPage() {
 
         {/* CTA principal */}
         <a
-          href="https://adowe.fr/#contact"
+          href="https://www.adowe.fr/#contact"
           className="block w-full py-4 rounded-xl bg-gradient-to-r from-[#00c2ff] to-[#8b5cf6] text-white font-syne font-bold text-base hover:opacity-90 transition-all shadow-[0_0_40px_rgba(0,194,255,0.3)] mb-3"
         >
           Discuter de mon projet avec ADOWE →
         </a>
 
         <a
-          href="https://adowe.fr"
+          href="https://www.adowe.fr"
           target="_blank"
           className="block w-full py-3 rounded-xl border border-white/15 text-slate-400 font-syne font-semibold text-sm hover:text-white hover:border-white/30 transition-all mb-6"
         >

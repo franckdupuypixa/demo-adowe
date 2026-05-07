@@ -51,7 +51,7 @@ JSON uniquement:
           <div style="padding:28px 32px;background:#0a0f2e;text-align:center;">
             <p style="margin:0 0 6px;color:#94a3b8;font-size:13px;">Vous voulez cette séquence email pour vos vrais clients ?</p>
             <p style="margin:0 0 20px;color:#ffffff;font-size:16px;font-weight:700;">ADOWE met tout en place pour vous en 48h.</p>
-            <a href="https://adowe.fr" style="display:inline-block;background:linear-gradient(135deg,#00c2ff,#8b5cf6);color:#ffffff;text-decoration:none;font-weight:700;font-size:14px;padding:14px 32px;border-radius:50px;letter-spacing:0.3px;">
+            <a href="https://www.adowe.fr" style="display:inline-block;background:linear-gradient(135deg,#00c2ff,#8b5cf6);color:#ffffff;text-decoration:none;font-weight:700;font-size:14px;padding:14px 32px;border-radius:50px;letter-spacing:0.3px;">
               Découvrir ADOWE →
             </a>
             <p style="margin:16px 0 0;color:#475569;font-size:11px;">adowe.fr · Agence marketing digitale</p>

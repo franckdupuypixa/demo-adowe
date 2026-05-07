@@ -74,7 +74,7 @@ export async function POST(req: NextRequest) {
         <div style="margin:28px 32px;background:linear-gradient(135deg,#060612,#0f1a3d);border-radius:12px;padding:28px;text-align:center;">
           <p style="color:#94a3b8;font-size:13px;margin:0 0 6px;">Prêt à passer à l'étape suivante ?</p>
           <p style="color:#ffffff;font-size:18px;font-weight:700;margin:0 0 20px;">ADOWE met tout en place pour vous en 48h</p>
-          <a href="https://adowe.fr" style="display:inline-block;background:linear-gradient(135deg,#00c2ff,#8b5cf6);color:#ffffff;text-decoration:none;font-weight:700;font-size:14px;padding:14px 36px;border-radius:50px;">
+          <a href="https://www.adowe.fr" style="display:inline-block;background:linear-gradient(135deg,#00c2ff,#8b5cf6);color:#ffffff;text-decoration:none;font-weight:700;font-size:14px;padding:14px 36px;border-radius:50px;">
             Discuter de mon projet →
           </a>
         </div>

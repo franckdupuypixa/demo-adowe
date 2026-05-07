@@ -186,7 +186,7 @@ export default function LabClient({ startTime, userData }: Props) {
             </div>
             <div className="flex gap-3 shrink-0">
               <a
-                href="https://adowe.fr/#contact"
+                href="https://www.adowe.fr/#contact"
                 target="_blank"
                 className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#00c2ff] to-[#8b5cf6] text-white text-sm font-syne font-bold hover:opacity-90 transition-all"
               >
